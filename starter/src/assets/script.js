@@ -1,34 +1,25 @@
-/* Create an array named products which you will use to add all of your product object literals that you create in the next step. */
-
-/* Create 3 or more product objects using object literal notation 
-   Each product should include five properties
-   - name: name of product (string)
-   - price: price of product (number)
-   - quantity: quantity in cart should start at zero (number)
-   - productId: unique id for the product (number)
-   - image: picture of product (url string)
-*/
+/*Array of objects (each object represents one of the offered products in the markt)*/
 
 const products = [
   {
     name: "Carton of Cherries",
     price: 4,
     quantity: 0,
-    productId: 0,
+    productId: 1,
     image: "images/cherry.jpg"
   },
   {
     name: "Carton of Strawberries",
     price: 5,
     quantity: 0,
-    productId: 1,
+    productId: 2,
     image: "images/strawberry.jpg"
   },
   {
     name: "Bag of Oranges",
     price: 10,
     quantity: 0,
-    productId: 2,
+    productId: 3,
     image: "images/orange.jpg"
   }
 ];
@@ -39,47 +30,98 @@ const products = [
    - strawberry.jpg by Allec Gomes
 */
 
-/* Declare an empty array named cart to hold the items in the cart */
+/*Empty array named cart to hold the items in the cart */
 
 const cart = [];
+ 
+/*Add product to cart:
 
-/* Create a function named addProductToCart that takes in the product productId as an argument
-  - addProductToCart should get the correct product based on the productId
-  - addProductToCart should then increase the product's quantity
-  - if the product is not already in the cart, add it to the cart
-*/
+Function addProductToCart enables to add a product to cart and increase its quantity. Conditional with Array.prototype.includes verifies based on product's Id whether a product already exists in the array const cart = []. If a product doesn't exist in the cart, function enables to add it to cart and increase its quantity with the method Array.prototype.push()*/
 
-/* Create a function named increaseQuantity that takes in the productId as an argument
-  - increaseQuantity should get the correct product based on the productId
-  - increaseQuantity should then increase the product's quantity
-*/
+function addProductToCart(productId) {
+  const element = products.find(function callbackOne (element) { /*Callback function is invoked within the method Array.prototype.find()*/ 
+    return element.productId === productId;
+  });
+  if (cart.includes(element)) {
+    element.quantity += 1;
+  } else {
+    element.quantity = 1;
+    cart.push(element);
+  }
+};
 
-/* Create a function named decreaseQuantity that takes in the productId as an argument
-  - decreaseQuantity should get the correct product based on the productId
-  - decreaseQuantity should decrease the quantity of the product
-  - if the function decreases the quantity to 0, the product is removed from the cart
-*/
+/*Increase product's quantity
 
-/* Create a function named removeProductFromCart that takes in the productId as an argument
-  - removeProductFromCart should get the correct product based on the productId
-  - removeProductFromCart should update the product quantity to 0
-  - removeProductFromCart should remove the product from the cart
-*/
+Function increaseQuantity enables to increase the quantity of a product that already exists in the cart. Method Array.prototype.forEach loops through each element (single product) of the array const cart = [] based on product's Id. If a given product is found in the array, then the customer will be able to increase its quantity*/
 
-/* Create a function named cartTotal that has no parameters
-  - cartTotal should iterate through the cart to get the total of all products
-  - cartTotal should return the sum of the products in the cart
-*/
+function increaseQuantity (productId) {
+  cart.forEach(function callbackTwo (element) { /*Callback function is invoked within the method Array.prototype.forEach()*/
+    if (productId === element.productId) {
+      element.quantity++;
+    };
+  }
+)};
 
-/* Create a function called emptyCart that empties the products from the cart */
+/*Decrease product's quantity:
 
-/* Create a function named pay that takes in an amount as an argument
-  - pay will return a negative number if there is a remaining balance
-  - pay will return a positive number if money should be returned to customer
-*/
+Function decreaseQuantity enables to decrease the quantity of a product in the cart. First, function will iterate through each element (product) of the array const cart = [] to determine its correct quantity. If a product is found, then customer will be able to decrease its quantity. Method Array.prototype.splice enables to decrease the quantity of a product by removing items from the array const cart = []*/
 
-/* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
+function decreaseQuantity(productId) {
+  cart.forEach(function callbackThree (element, index) { /*Callback function is invoked within the method Array.prototype.forEach()*/
+    if (productId === element.productId) {
+      if (element.quantity === 1) {
+        cart.splice(index, 1); /* -> If an element exists in cart, customer may reduce its quantity. Method splice removes one item of a given element based on its index. It will remove only one item at a time*/
+      }
+      element.quantity--;
+    }
+  });
+};
 
+/*Remove product from cart:
+
+If invoked, function removeProductFromCart will iterate through each element (product) of the array const cart = []. In case a product is found with the forEach loop, customer will be able to remove a product from the cart. Method Array.prototype.splice() removes an existing product*/
+
+function removeProductFromCart(productId) {
+  cart.forEach(function callbackFour (element, index) { /*Callback function is invoked within the method Array.prototype.forEach()*/
+    if (element.productId === productId) {
+      element.quantity--;
+      cart.splice(index, 1); /* -> If an element exists in cart, customer may remove it from the cart. Method splice removes all items of a product from the cart*/
+    };
+  });
+};
+
+/*Calculate total:
+
+Function cartTotal iterates through each element (product) in the array const cart []. If a product is found, function will calculate total price of each product by multiplying its quantity by the price of a single item. Return statement will return total price*/
+
+function cartTotal() {
+  let totalPrice = 0;
+  cart.forEach(function callbackFive (element) { /*Callback function is invoked within the method Array.prototype.forEach()*/
+    totalPrice += element.price * element.quantity;
+  });
+  return totalPrice;
+};
+
+/*Empty cart: 
+
+Function emptyCart iterates through each product (product) of the array const cart = []. Array.prototype.splice empties cart completely*/
+
+function emptyCart() {
+  cart.forEach(function callbackSix (element) { /*Callback function is invoked within the method Array.prototype.forEach()*/
+    element.quantity = 0;
+  });
+  cart.splice(0, cart.length)
+};
+
+/*Payment
+
+Function payment will execute code to check how much money is submitted. If more money is given, customer will get a change. If not, a negative value (representing how much customer should pay more) will be displayed.*/
+
+let cash = 0;
+function pay(amount) {
+  cash += amount;
+  return cash - cartTotal();
+};
 
 /* The following is for running unit tests. 
    To fully complete this project, it is expected that all tests pass.
@@ -99,4 +141,4 @@ module.exports = {
    emptyCart,
    /* Uncomment the following line if completing the currency converter bonus */
    // currency
-}
+};
